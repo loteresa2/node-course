@@ -1,16 +1,9 @@
 const request = require('supertest')
 const app = require('../src/app')
 const User = require('../src/models/user')
+const { userOne, setupDatabase} = require('./fixtures/db')
 
-const userOne = {
-  name: 'Mike',
-  email: 'mike@example.com',
-  password: 'whatifme'
-}
-beforeEach(async () => {
-  await User.deleteMany()
-  await new User(userOne).save()
-})
+beforeEach(setupDatabase)
 
 test('Should signup a new user', async() => {
   const response = await request(app).post('/users').send({
