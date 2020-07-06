@@ -19,10 +19,20 @@ io.on('connection', (socket) => {
 
   // emit the updated count to any new connection/join
   socket.emit('message', 'Welcome!')
+  socket.broadcast.emit('message', 'A new user has joined!')
 
-  socket.on('sendMessage', (message) => {
+  socket.on('message', (message) => {
+    io.emit('message', message)
+  })
+
+  socket.on('sendLocation', (coords) => {
     // emit update to every single connection
-    io.emit('sendMessage', message)
+    const locationLink = `https://google.com/maps?q=${coords.lat},${coords.lng}`
+    io.emit('sendLocation', locationLink)
+  })
+
+  socket.on('disconnect', () => {
+    io.emit('message', 'A user has left')
   })
 })
 
